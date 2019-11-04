@@ -20,6 +20,17 @@ public class AppUser {
 
     private boolean isAdmin = false;
 
+    public AppUser() {
+        // empty constructor
+    }
+
+    public AppUser(Long id, String username, boolean isWaiter, boolean isAdmin) {
+        this.id = id;
+        this.username = username;
+        this.isWaiter = isWaiter;
+        this.isAdmin = isAdmin;
+    }
+
     public Long getId() {
         return id;
     }

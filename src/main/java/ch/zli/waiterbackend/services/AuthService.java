@@ -1,5 +1,6 @@
 package ch.zli.waiterbackend.services;
 
+import ch.zli.waiterbackend.authentication.IAuthenticationFacade;
 import ch.zli.waiterbackend.entities.AppUser;
 import ch.zli.waiterbackend.repositories.AppUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,9 +13,12 @@ public class AuthService {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    AuthService(AppUserRepository appUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private IAuthenticationFacade authenticationFacade;
+
+    AuthService(AppUserRepository appUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder, IAuthenticationFacade authenticationFacade) {
         this.appUserRepository = appUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public void register(AppUser user) {
@@ -24,9 +28,18 @@ public class AuthService {
             }
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        if(appUserRepository.getNumberOfUsers() == 0) {
+        if (appUserRepository.getNumberOfUsers() == 0) {
             user.setAdmin(true);
         }
         appUserRepository.save(user);
+    }
+
+    public AppUser getCurrentUser() {
+        String user = authenticationFacade.getAuthentication().getName();
+        return appUserRepository.findByUsername(user);
+    }
+
+    public boolean isCurrentUserAdmin() {
+        return getCurrentUser().isAdmin();
     }
 }
