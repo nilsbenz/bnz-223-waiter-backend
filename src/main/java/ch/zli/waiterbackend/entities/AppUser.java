@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class AppUser {
@@ -19,17 +20,6 @@ public class AppUser {
     private boolean isWaiter = false;
 
     private boolean isAdmin = false;
-
-    public AppUser() {
-        // empty constructor
-    }
-
-    public AppUser(Long id, String username, boolean isWaiter, boolean isAdmin) {
-        this.id = id;
-        this.username = username;
-        this.isWaiter = isWaiter;
-        this.isAdmin = isAdmin;
-    }
 
     public Long getId() {
         return id;
@@ -69,5 +59,18 @@ public class AppUser {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser user = (AppUser) o;
+        return Objects.equals(id, user.id);
     }
 }

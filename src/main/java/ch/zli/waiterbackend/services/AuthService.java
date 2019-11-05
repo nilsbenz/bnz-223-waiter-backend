@@ -35,11 +35,17 @@ public class AuthService {
     }
 
     public AppUser getCurrentUser() {
-        String user = authenticationFacade.getAuthentication().getName();
-        return appUserRepository.findByUsername(user);
+        String username = authenticationFacade.getAuthentication().getName();
+        AppUser user = appUserRepository.findByUsername(username);
+        user.setPassword(null);
+        return user;
     }
 
     public boolean isCurrentUserAdmin() {
         return getCurrentUser().isAdmin();
+    }
+
+    public boolean isCurrentUserWaiter() {
+        return getCurrentUser().isWaiter();
     }
 }
