@@ -21,10 +21,7 @@ public class UserService {
 
     public List<AppUser> listUsers() {
         if (authService.isCurrentUserAdmin()) {
-            return appUserRepository.findAll()
-                    .stream()
-                    .peek(o -> o.setPassword(null))
-                    .collect(Collectors.toList());
+            return appUserRepository.findAll();
         } else {
             throw new IllegalArgumentException("Diese Funktion können nur Administratoren ausführen.");
         }
@@ -32,7 +29,6 @@ public class UserService {
 
     public AppUser myself() {
         AppUser currentUser = authService.getCurrentUser();
-        currentUser.setPassword(null);
         return currentUser;
     }
 

@@ -37,7 +37,6 @@ public class AuthService {
     public AppUser getCurrentUser() {
         String username = authenticationFacade.getAuthentication().getName();
         AppUser user = appUserRepository.findByUsername(username);
-        user.setPassword(null);
         return user;
     }
 
