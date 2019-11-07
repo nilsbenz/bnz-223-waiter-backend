@@ -2,7 +2,6 @@ package ch.zli.waiterbackend.controllers;
 
 import ch.zli.waiterbackend.controllers.dtos.OrderRequestDto;
 import ch.zli.waiterbackend.controllers.dtos.OrderResponseDto;
-import ch.zli.waiterbackend.entities.Order;
 import ch.zli.waiterbackend.services.OrderService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +30,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> listOrders() {
+    public List<OrderResponseDto> listOrders() {
         return orderService.listOrders();
     }
 

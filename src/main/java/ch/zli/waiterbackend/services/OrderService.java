@@ -2,13 +2,16 @@ package ch.zli.waiterbackend.services;
 
 import ch.zli.waiterbackend.controllers.dtos.OrderRequestDto;
 import ch.zli.waiterbackend.controllers.dtos.OrderResponseDto;
+import ch.zli.waiterbackend.entities.AppUser;
 import ch.zli.waiterbackend.entities.Order;
 import ch.zli.waiterbackend.entities.OrderItem;
 import ch.zli.waiterbackend.repositories.OrderItemRepository;
 import ch.zli.waiterbackend.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -25,9 +28,15 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public List<Order> listOrders() {
-        if (authService.isCurrentUserAdmin() || authService.isCurrentUserWaiter()) {
-            return orderRepository.findAll();
+    public List<OrderResponseDto> listOrders() {
+        if (authService.isCurrentUserAdmin()) {
+            List<OrderResponseDto> response = getAllOrderResponseDtos();
+            Collections.reverse(response);
+            return response;
+        } else if (authService.isCurrentUserWaiter()) {
+            List<OrderResponseDto> response = getOrderResponseDtosOfCurrentUser();
+            Collections.reverse(response);
+            return response;
         } else {
             throw new IllegalArgumentException("Diese Funktion können nur Administratoren und das Servicepersonal ausführen.");
         }
@@ -49,6 +58,36 @@ public class OrderService {
         } else {
             throw new IllegalArgumentException("Diese Funktion können nur Administratoren und das Servicepersonal ausführen.");
         }
+    }
+
+    private List<OrderResponseDto> getAllOrderResponseDtos() {
+        return orderRepository.findAll().stream()
+                .map(order -> {
+                    OrderResponseDto orderResponseDto = new OrderResponseDto();
+                    orderResponseDto.setId(order.getId());
+                    orderResponseDto.setTable(order.getTable());
+                    orderResponseDto.setUser(order.getUser());
+                    orderResponseDto.setOrderItems(orderItemRepository.findAllOfOrder(order));
+                    orderResponseDto.calculatePrice();
+                    return orderResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<OrderResponseDto> getOrderResponseDtosOfCurrentUser() {
+        AppUser user = authService.getCurrentUser();
+        return orderRepository.findAll().stream()
+                .filter(order -> order.getUser() == user)
+                .map(order -> {
+                    OrderResponseDto orderResponseDto = new OrderResponseDto();
+                    orderResponseDto.setId(order.getId());
+                    orderResponseDto.setTable(order.getTable());
+                    orderResponseDto.setUser(order.getUser());
+                    orderResponseDto.setOrderItems(orderItemRepository.findAllOfOrder(order));
+                    orderResponseDto.calculatePrice();
+                    return orderResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     private Order saveOrderFromDto(OrderRequestDto orderRequestDto) {
