@@ -28,8 +28,15 @@ public class UserService {
     }
 
     public AppUser myself() {
-        AppUser currentUser = authService.getCurrentUser();
-        return currentUser;
+        return authService.getCurrentUser();
+    }
+
+    public void deleteUser(Long id) {
+        if (authService.isCurrentUserAdmin()) {
+            appUserRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Diese Funktion können nur Administratoren ausführen.");
+        }
     }
 
     public void addWaiter(Long id) {

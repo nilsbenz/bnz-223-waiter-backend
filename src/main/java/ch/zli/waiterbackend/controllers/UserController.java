@@ -36,6 +36,11 @@ public class UserController {
         return userService.myself();
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+
     @PostMapping("/waiters/{id}")
     public void addWaiter(@PathVariable Long id) {
         userService.addWaiter(id);
