@@ -17,6 +17,14 @@ public class Item {
 
     private BigDecimal price;
 
+    public Item() {
+    }
+
+    public Item(String description, BigDecimal price) {
+        this.description = description;
+        this.price = price;
+    }
+
     public Long getId() {
         return id;
     }

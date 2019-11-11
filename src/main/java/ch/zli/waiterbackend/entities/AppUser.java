@@ -21,6 +21,16 @@ public class AppUser {
 
     private boolean isAdmin = false;
 
+    public AppUser() {
+    }
+
+    public AppUser(String username, String password, boolean isWaiter, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.isWaiter = isWaiter;
+        this.isAdmin = isAdmin;
+    }
+
     public Long getId() {
         return id;
     }

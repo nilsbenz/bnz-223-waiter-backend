@@ -14,6 +14,13 @@ public class Table {
 
     private String description;
 
+    public Table() {
+    }
+
+    public Table(String description) {
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }

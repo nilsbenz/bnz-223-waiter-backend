@@ -22,6 +22,14 @@ public class Order {
     @JoinColumn(name = "app_table")
     private Table table;
 
+    public Order() {
+    }
+
+    public Order(AppUser user, Table table) {
+        this.user = user;
+        this.table = table;
+    }
+
     public Long getId() {
         return id;
     }
